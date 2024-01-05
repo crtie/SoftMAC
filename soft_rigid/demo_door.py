@@ -6,13 +6,14 @@ import numpy as np
 import torch
 import torch.optim as optim
 import matplotlib.pyplot as plt
+import os
 from matplotlib.ticker import ScalarFormatter
 
 from engine.taichi_env import TaichiEnv
 from utils import make_movie, render, prepare
 
 np.set_printoptions(precision=4)
-
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 class Controller:
     def __init__(
         self, steps=200, substeps=4000, n_controllers=1, actions_init=None,
