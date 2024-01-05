@@ -104,8 +104,9 @@ class TaichiEnv:
         mpm_action = action if self.control_mode == "mpm" else None
         rigid_action = action if self.control_mode == "rigid" else None
 
-        rigid_action_grad, ext_f_grad_list = self.rigid_simulator.step_grad(
-            self.simulator.cur // self.substeps, rigid_action)
+        # rigid_action_grad, ext_f_grad_list = self.rigid_simulator.step_grad(
+        #     self.simulator.cur // self.substeps, rigid_action)
+        ext_f_grad_list = []
 
         mpm_action_grad = np.zeros(action.shape)
         for s in range(start - 1, self.simulator.cur - 1, -1):
@@ -116,7 +117,7 @@ class TaichiEnv:
 
         if action is None:
             return None
-        action_grad = mpm_action_grad if self.control_mode == "mpm" else rigid_action_grad
+        action_grad = mpm_action_grad #if self.control_mode == "mpm" else rigid_action_grad
         return action_grad
 
     forward = step

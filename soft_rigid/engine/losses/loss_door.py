@@ -11,7 +11,7 @@ class DoorLoss:
         self.n_particles = mpm_sim.n_particles
         self.n_particles_per_controller = self.n_particles
         self.particle_x = mpm_sim.x
-        self.rigid = mpm_sim.primitives[0]
+        # self.rigid = mpm_sim.primitives[0]
 
         self.pose_weight = ti.field(dtype=dtype, shape=())
         self.velocity_weight = ti.field(dtype=dtype, shape=())
@@ -34,21 +34,24 @@ class DoorLoss:
     # -----------------------------------------------------------
     @ti.kernel
     def compute_pose_loss_kernel(self, f: ti.i32):
-        self.pose_loss[None] += 1.0 * (self.rigid.rotation[f][0] - ti.static(ti.cos(np.pi / 8))) ** 2
+        # self.pose_loss[None] += 1.0 * (self.rigid.rotation[f][0] - ti.static(ti.cos(np.pi / 8))) ** 2
+        pass
 
     # -----------------------------------------------------------
     # compute velocity loss
     # -----------------------------------------------------------
     @ti.kernel
     def compute_velocity_loss_kernel(self, f: ti.i32):
-        self.velocity_loss[None] += self.rigid.v[f].dot(self.rigid.v[f])
+        # self.velocity_loss[None] += self.rigid.v[f].dot(self.rigid.v[f])
+        pass
 
     # -----------------------------------------------------------
     # compute contact loss
     # -----------------------------------------------------------
     @ti.func
     def l2_dist(self, f, i):
-        return (self.particle_x[f, i] - self.rigid.position[f]).dot(self.particle_x[f, i] - self.rigid.position[f])
+        # return (self.particle_x[f, i] - self.rigid.position[f]).dot(self.particle_x[f, i] - self.rigid.position[f])
+        return 0.
 
     @ti.kernel
     def compute_contact_distance_kernel(self, f: ti.i32):

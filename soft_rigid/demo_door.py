@@ -1,3 +1,5 @@
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 import time
 from argparse import ArgumentParser
 
@@ -6,14 +8,14 @@ import numpy as np
 import torch
 import torch.optim as optim
 import matplotlib.pyplot as plt
-import os
+
 from matplotlib.ticker import ScalarFormatter
 
 from engine.taichi_env import TaichiEnv
 from utils import make_movie, render, prepare
 
 np.set_printoptions(precision=4)
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+
 class Controller:
     def __init__(
         self, steps=200, substeps=4000, n_controllers=1, actions_init=None,
@@ -72,7 +74,7 @@ def get_init_actions(args, env, choice=0):
         actions = torch.zeros(args.steps, 3)
     if choice == 1:
         actions = torch.zeros(args.steps, 3)
-        actions[:, 2] = 0.1
+        actions[:, 1] = 0.5
     else:
         assert False
     return torch.FloatTensor(actions)
@@ -209,7 +211,7 @@ if __name__ == "__main__":
     parser.add_argument("--exp-name", "-n", type=str, default="door")
     parser.add_argument("--config", type=str, default="config/demo_door_config.py")
     parser.add_argument("--render-interval", type=int, default=1)
-    parser.add_argument("--epochs", type=int, default=10)
+    parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--steps", type=int, default=3000)
     args = parser.parse_args()
     main(args)

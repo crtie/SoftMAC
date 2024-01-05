@@ -17,6 +17,7 @@ def make_movie(log_dir, name=None):
         for filename in filenames:
             image = imageio.imread(log_dir / "figs" / filename)
             writer.append_data(image)
+    print("Movie saved")
     os.system(f"rm -r {str(log_dir / 'figs')}")
 
 def render(env, log_dir, epoch=0, action=None, n_steps=100, interval=10):
@@ -35,6 +36,7 @@ def render(env, log_dir, epoch=0, action=None, n_steps=100, interval=10):
             img = env.render(frame)
             img = img[:, :, ::-1]
             cv2.imwrite(str(fig_dir / f"{epoch:02d}-{i:05d}.png"), img)
+            print(f"Frame {i} saved")
     if action is not None:
         env.set_copy(is_copy)
 

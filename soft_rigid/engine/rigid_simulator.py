@@ -39,6 +39,7 @@ class RigidSimulator:
             numNodes = skeleton.getNumBodyNodes()
             start_idx = self.skeleton_offset[i]
             self.bodyNodes += [skeleton.getBodyNode(j) for j in range(numNodes)]
+            print(numNodes, start_idx)
             self.nodeDepIdx += [np.array(skeleton.getBodyNode(j).getDependentGenCoordIndices()) + start_idx for j in range(numNodes)]
             self.node2skeleton += [i] * numNodes
             self.node_id_in_skeleton += list(range(numNodes))

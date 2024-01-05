@@ -38,40 +38,40 @@ _C.SHAPES = [
         "color": ((121 << 16) + (36 << 8) + 13),
         "init_rot": None
     },
-    {
-        "shape": "box",
-        "width": (0.03, 0.05, 0.07),
-        "init_pos": [0.65, 0.15, 0.365],
-        "n_particles": 2100,
-        "color": ((121 << 16) + (36 << 8) + 13),
-        "init_rot": None
-    },
-    {
-        "shape": "box",
-        "width": (0.03, 0.05, 0.14),
-        "init_pos": [0.72, 0.15, 0.4],
-        "n_particles": 2100,
-        "color": ((121 << 16) + (36 << 8) + 13),
-        "init_rot": None
-    }
+    # {
+    #     "shape": "box",
+    #     "width": (0.03, 0.05, 0.07),
+    #     "init_pos": [0.65, 0.15, 0.365],
+    #     "n_particles": 2100,
+    #     "color": ((121 << 16) + (36 << 8) + 13),
+    #     "init_rot": None
+    # },
+    # {
+    #     "shape": "box",
+    #     "width": (0.03, 0.05, 0.14),
+    #     "init_pos": [0.72, 0.15, 0.4],
+    #     "n_particles": 2100,
+    #     "color": ((121 << 16) + (36 << 8) + 13),
+    #     "init_rot": None
+    # }
 ]
 
 # ---------------------------------------------------------------------------- #
 # Rigid
 # ---------------------------------------------------------------------------- #
-_C.RIGID = RIGID = CN()
-RIGID.gravity = gravity
-RIGID.init_state = (
-    0.,         # e
-    0.,         # w
-)
+# _C.RIGID = RIGID = CN()
+# RIGID.gravity = gravity
+# RIGID.init_state = (
+#     0.,         # e
+#     0.,         # w
+# )
 
 Door = CN()
 Door.friction = 0.001  
 Door.urdf_path = "envs/assets/door/door.urdf"
 Door.enable_external_force = True
 
-_C.PRIMITIVES = [ Door, ]
+_C.PRIMITIVES = [  ]
 
 # ---------------------------------------------------------------------------- #
 # RENDERER

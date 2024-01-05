@@ -59,19 +59,19 @@ _C.SHAPES = [
 # ---------------------------------------------------------------------------- #
 # Rigid
 # ---------------------------------------------------------------------------- #
-_C.RIGID = RIGID = CN()
-RIGID.gravity = gravity
-RIGID.init_state = (
-    0.,         # e
-    0.,         # w
-)
+# _C.RIGID = RIGID = CN()
+# RIGID.gravity = gravity
+# RIGID.init_state = (
+#     0.,         # e
+#     0.,         # w
+# )
 
 Door = CN()
 Door.friction = 0.001  
 Door.urdf_path = "envs/assets/door/door.urdf"
 Door.enable_external_force = True
 
-_C.PRIMITIVES = [ Door, ]
+_C.PRIMITIVES = [  ]
 
 # ---------------------------------------------------------------------------- #
 # RENDERER
