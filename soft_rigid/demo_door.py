@@ -74,7 +74,7 @@ def get_init_actions(args, env, choice=0):
         actions = torch.zeros(args.steps, 3)
     if choice == 1:
         actions = torch.zeros(args.steps, 3)
-        actions[:, 1] = 0.5
+        actions[:, 1] = 0.
     else:
         assert False
     return torch.FloatTensor(actions)
@@ -118,20 +118,20 @@ def main(args):
     env = TaichiEnv(cfg, loss=True)
     env.set_control_mode("mpm")
     env.initialize()
-    for i in range(10):
+    # for i in range(10):
         # Adamas setExtForce has bug. Result of the first epoch differs from later epochs.
-        env.forward()
+        # env.forward()
     env.initialize()
     env.rigid_simulator.ext_grad_scale = 1 / 40.        # it works, but don't know why...
 
     # Prepare Controller
     control_idx = -torch.ones(env.simulator.n_particles)    # -1 for uncontrolled particles
-    control_idx[:] = 0                                  # controller id starts from 0
+    control_idx[:1] = 0                                  # controller id starts from 0
     env.simulator.set_control_idx(control_idx)
 
     actions = get_init_actions(args, env, choice=1)
     controller = Controller(
-        steps=args.steps // 20, substeps=args.steps, actions_init=actions,
+        steps=args.steps // 1, substeps=args.steps, actions_init=actions,
         lr=1e-1, warmup=5, decay=0.99, betas=(0.5, 0.999)
     )
 
@@ -142,6 +142,7 @@ def main(args):
         tik = time.time()
         ti.ad.clear_all_gradients()
         env.initialize()
+        print("position of 0-th particle",env.simulator.x[0,0])
         prepare_time = time.time() - tik
 
         # forward
@@ -155,7 +156,8 @@ def main(args):
         tik = time.time()
         loss, pose_loss, vel_loss, contact_loss = 0., 0., 0., 0.
         with ti.ad.Tape(loss=env.loss.loss):
-            for f in range(2000, env.simulator.cur + 1, 20):
+            for f in range(1, env.simulator.cur + 1, 20):
+                print("compute loss", f)
                 loss_info = env.compute_loss(f)
                 loss = loss_info["loss"]
                 pose_loss += loss_info["pose_loss"]
@@ -166,6 +168,7 @@ def main(args):
         # backward
         tik = time.time()
         actions_grad = env.backward()
+        print("actions_grad", actions_grad)
         backward_time = time.time() - tik
 
         # optimize
@@ -182,9 +185,9 @@ def main(args):
         
         plot_actions(log_dir, actions, actions_grad, epoch)
 
-        if (epoch + 1) % args.render_interval == 0 or epoch == 0:
-            render(env, log_dir, 0, n_steps=args.steps, interval=args.steps // 50)
-            make_movie(log_dir, f"epoch{epoch}")
+        # if (epoch + 1) % args.render_interval == 0 or epoch == 0:
+        #     render(env, log_dir, 0, n_steps=args.steps, interval=args.steps // 50, control_idx=control_idx)
+        #     make_movie(log_dir, f"epoch{epoch}")
 
 
     # save loss curve
@@ -211,7 +214,7 @@ if __name__ == "__main__":
     parser.add_argument("--exp-name", "-n", type=str, default="door")
     parser.add_argument("--config", type=str, default="config/demo_door_config.py")
     parser.add_argument("--render-interval", type=int, default=1)
-    parser.add_argument("--epochs", type=int, default=1)
-    parser.add_argument("--steps", type=int, default=3000)
+    parser.add_argument("--epochs", type=int, default=10)
+    parser.add_argument("--steps", type=int, default=1)
     args = parser.parse_args()
     main(args)

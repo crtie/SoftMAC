@@ -209,6 +209,7 @@ class MPMSimulator:
             if ti.static(self.n_control > 0):
                 control_idx = self.control_idx[p]
                 if control_idx >= 0:
+                    # print("add control impulse at particle", p, "control_idx", control_idx, "action", self.action[control_idx])
                     control_impulse += 6e-4 * self.action[control_idx] * self.dt
 
             base = (self.x[f, p] * self.inv_dx - 0.5).cast(int)

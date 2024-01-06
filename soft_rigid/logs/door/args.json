@@ -3,5 +3,5 @@
     "config": "config/demo_door_config.py",
     "render_interval": 1,
     "epochs": 10,
-    "steps": 3000
+    "steps": 1
 }

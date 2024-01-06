@@ -64,13 +64,13 @@ class TaichiEnv:
         
         self.action_list = []
 
-    def render(self, f=None):
+    def render(self, f=None, control_idx=None):
         if f is None:
             f = self.simulator.cur
         x = self.simulator.get_x(f)
         self.renderer.set_particles(x, self.particle_colors)
         self.renderer.set_primitives(f)
-        img = self.renderer.render()
+        img = self.renderer.render(control_idx=control_idx)
         return img
 
     def step(self, action=None):

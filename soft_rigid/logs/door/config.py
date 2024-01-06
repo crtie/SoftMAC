@@ -38,22 +38,22 @@ _C.SHAPES = [
         "color": ((121 << 16) + (36 << 8) + 13),
         "init_rot": None
     },
-    {
-        "shape": "box",
-        "width": (0.03, 0.05, 0.07),
-        "init_pos": [0.65, 0.15, 0.365],
-        "n_particles": 2100,
-        "color": ((121 << 16) + (36 << 8) + 13),
-        "init_rot": None
-    },
-    {
-        "shape": "box",
-        "width": (0.03, 0.05, 0.14),
-        "init_pos": [0.72, 0.15, 0.4],
-        "n_particles": 2100,
-        "color": ((121 << 16) + (36 << 8) + 13),
-        "init_rot": None
-    }
+    # {
+    #     "shape": "box",
+    #     "width": (0.03, 0.05, 0.07),
+    #     "init_pos": [0.65, 0.15, 0.365],
+    #     "n_particles": 2100,
+    #     "color": ((121 << 16) + (36 << 8) + 13),
+    #     "init_rot": None
+    # },
+    # {
+    #     "shape": "box",
+    #     "width": (0.03, 0.05, 0.14),
+    #     "init_pos": [0.72, 0.15, 0.4],
+    #     "n_particles": 2100,
+    #     "color": ((121 << 16) + (36 << 8) + 13),
+    #     "init_rot": None
+    # }
 ]
 
 # ---------------------------------------------------------------------------- #
@@ -89,7 +89,8 @@ RENDERER.camera_rot = (-0.9, 0.0)
 # ENV
 # ---------------------------------------------------------------------------- #
 _C.ENV = ENV = CN()
-ENV.loss_type = "DoorLoss"
+# ENV.loss_type = "DoorLoss"
+ENV.loss_type = "JacobianLoss"
 loss = ENV.loss = CN()
 loss.weight = (1., 0., 0.)  # pose, velocity, dist
 loss.target_path = ''

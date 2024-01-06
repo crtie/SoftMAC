@@ -20,7 +20,8 @@ def make_movie(log_dir, name=None):
     print("Movie saved")
     os.system(f"rm -r {str(log_dir / 'figs')}")
 
-def render(env, log_dir, epoch=0, action=None, n_steps=100, interval=10):
+def render(env, log_dir, epoch=0, action=None, n_steps=100, interval=10, control_idx=None):
+    #! CHENRUI: control_idx is for rendering the attached points using different colors
     print("Rendering...")
     fig_dir = log_dir / "figs"
     fig_dir.mkdir(exist_ok=True)
@@ -33,7 +34,7 @@ def render(env, log_dir, epoch=0, action=None, n_steps=100, interval=10):
             env.step(action[i])
         if i % interval == 0:
             frame = i * env.substeps if action is None else 0
-            img = env.render(frame)
+            img = env.render(frame, control_idx=control_idx)
             img = img[:, :, ::-1]
             cv2.imwrite(str(fig_dir / f"{epoch:02d}-{i:05d}.png"), img)
             print(f"Frame {i} saved")

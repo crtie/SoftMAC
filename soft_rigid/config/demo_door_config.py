@@ -89,7 +89,8 @@ RENDERER.camera_rot = (-0.9, 0.0)
 # ENV
 # ---------------------------------------------------------------------------- #
 _C.ENV = ENV = CN()
-ENV.loss_type = "DoorLoss"
+# ENV.loss_type = "DoorLoss"
+ENV.loss_type = "JacobianLoss"
 loss = ENV.loss = CN()
 loss.weight = (1., 0., 0.)  # pose, velocity, dist
 loss.target_path = ''
