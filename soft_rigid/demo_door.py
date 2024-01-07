@@ -12,8 +12,8 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import ScalarFormatter
 
 from engine.taichi_env import TaichiEnv
-from utils import make_movie, render, prepare
-
+from utils import make_movie, render, prepare, fps_select, knn_select
+from pdb import set_trace as bp
 np.set_printoptions(precision=4)
 
 class Controller:
@@ -32,6 +32,7 @@ class Controller:
                 assert actions_init.shape[0] == substeps
                 actions_init = actions_init.reshape(steps, -1, 3 * n_controllers).mean(axis=1)
             self.action = actions_init.clone().detach().requires_grad_(True)
+        print("self.action",self.action.shape)
 
         # optimizer
         self.optimizer = optim.Adam([self.action, ], betas=betas)
@@ -69,12 +70,12 @@ class Controller:
 
         self.epoch += 1
 
-def get_init_actions(args, env, choice=0):
+def get_init_actions(args, env, n_controllers=1, choice=0):
     if choice == 0:
-        actions = torch.zeros(args.steps, 3)
+        actions = torch.zeros(args.steps, n_controllers, 3)
     if choice == 1:
-        actions = torch.zeros(args.steps, 3)
-        actions[:, 1] = 0.
+        actions = torch.zeros(args.steps,n_controllers, 3)
+        # actions[:, 1] = 0.
     else:
         assert False
     return torch.FloatTensor(actions)
@@ -101,6 +102,23 @@ def plot_actions(log_dir, actions, actions_grad, epoch):
 
     torch.save(actions, log_dir / "ckpt" / f"actions_{epoch}.pt")
 
+def choose_control_idx(env, num_controller):
+    control_idx = -torch.ones(env.simulator.n_particles)
+    init_particles, _ = env.shapes.get()
+    # print("init_particles",init_particles.shape)
+    cluster_centers = fps_select(init_particles, num_controller)
+    # print("cluster_centers",cluster_centers)
+    for i in range(num_controller):
+        cluster_points = knn_select(init_particles, cluster_centers[i], 8)
+        # cluster_points = cluster_centers[i]
+        # print("cluster_points",cluster_points)
+        control_idx[cluster_points] = i
+    print(np.unique(control_idx))
+    return control_idx
+
+
+
+
 # Add the following to "engine/renderer/renderer.py: def set_primitives(self, f)" for btter visualization
 # mesh.visual.face_colors = np.array([
 #     [0.6, 0.6, 0.68, 1.0] for i in range(12)
@@ -125,14 +143,18 @@ def main(args):
     env.rigid_simulator.ext_grad_scale = 1 / 40.        # it works, but don't know why...
 
     # Prepare Controller
-    control_idx = -torch.ones(env.simulator.n_particles)    # -1 for uncontrolled particles
-    control_idx[:1] = 0                                  # controller id starts from 0
+    # control_idx = -torch.ones(env.simulator.n_particles)    # -1 for uncontrolled particles
+    # control_idx[:5] = 0                                  # controller id starts from 0
+    # control_idx[10:15] = 1
+    num_controller = cfg.SIMULATOR.n_controllers
+    control_idx = choose_control_idx(env, num_controller)
     env.simulator.set_control_idx(control_idx)
 
-    actions = get_init_actions(args, env, choice=1)
+
+    actions = get_init_actions(args, env, n_controllers=num_controller, choice=1)
     controller = Controller(
         steps=args.steps // 1, substeps=args.steps, actions_init=actions,
-        lr=1e-1, warmup=5, decay=0.99, betas=(0.5, 0.999)
+        lr=1e-1, warmup=5, decay=0.99, betas=(0.5, 0.999), n_controllers=num_controller,
     )
 
     loss_log = []
@@ -172,12 +194,14 @@ def main(args):
         backward_time = time.time() - tik
 
         # optimize
-        tik = time.time()
-        controller.step(actions_grad)
-        optimize_time = time.time() - tik
+        # tik = time.time()
+        # controller.step(actions_grad)
+        # optimize_time = time.time() - tik
+        optimize_time = 0.
 
         total_time = prepare_time + forward_time + loss_time + backward_time + optimize_time
-        print("+============== Epoch {} ==============+ lr: {:.4f}".format(epoch, controller.latest_lr))
+        # print("+============== Epoch {} ==============+ lr: {:.4f}".format(epoch, controller.latest_lr))
+        print("+============== Epoch {} ================+".format(epoch))
         print("Time: total {:.2f}, pre {:.2f}, forward {:.2f}, loss {:.2f}, backward {:.2f}, optimize {:.2f}".format(total_time, prepare_time, forward_time, loss_time, backward_time, optimize_time))
         print("Loss: {:.4f} pose: {:.4f} vel: {:.4f} contact: {:.4f}".format(loss, pose_loss, vel_loss, contact_loss))
 
@@ -185,9 +209,9 @@ def main(args):
         
         plot_actions(log_dir, actions, actions_grad, epoch)
 
-        # if (epoch + 1) % args.render_interval == 0 or epoch == 0:
-        #     render(env, log_dir, 0, n_steps=args.steps, interval=args.steps // 50, control_idx=control_idx)
-        #     make_movie(log_dir, f"epoch{epoch}")
+        if (epoch + 1) % args.render_interval == 0 or epoch == 0:
+            render(env, log_dir, 0, n_steps=args.steps, interval=1, control_idx=control_idx)
+            make_movie(log_dir, f"epoch{epoch}")
 
 
     # save loss curve

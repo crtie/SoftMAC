@@ -25,7 +25,7 @@ _C.SIMULATOR.ground_friction = 0.
 _C.SIMULATOR.gravity = (0.,0.,0.)
 _C.SIMULATOR.ptype = 1  # 0: plastic 1: elastic 2: liquid
 _C.SIMULATOR.material_model = 0 # 0: Fixed Corotated 1: Neo-Hookean
-_C.SIMULATOR.n_controllers = 1
+_C.SIMULATOR.n_controllers = 10
 _C.SIMULATOR.dt = 1e-3
 _C.SIMULATOR.collision_type = 2 # 0: grid 1: particle 2: mixed
 

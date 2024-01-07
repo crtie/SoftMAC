@@ -64,3 +64,33 @@ def prepare(args):
         os.system(f"rm -r {str(action_dir)}")
     action_dir.mkdir(exist_ok=True)
     return log_dir, cfg
+
+
+# ===============================
+# select control points
+# ===============================
+
+def fps_select(points, n_samples):
+    # points: (n_points, dim)
+    # return: (n_samples, )
+    n_points = points.shape[0]
+    selected_idx = []
+    distances = np.zeros(n_points)
+    distances[:] = 1e10
+    farthest = np.random.randint(n_points)
+    distances[farthest] = 0
+    for i in range(n_samples):
+        farthest = np.argmax(distances)
+        selected_idx.append(farthest)
+        for j in range(n_points):
+            distances[j] = min(distances[j], np.linalg.norm(points[j] - points[farthest]))
+    return np.array(selected_idx)
+
+def knn_select(points, center_idx ,n_samples):
+    # points: (n_points, dim)
+    # return: (n_samples, )
+    center = points[center_idx]
+    n_points = points.shape[0]
+    dist = np.linalg.norm(points - center, axis=1)
+    selected_idx = np.argsort(dist)[:n_samples]
+    return np.array(selected_idx)

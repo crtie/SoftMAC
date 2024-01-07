@@ -73,7 +73,7 @@ class MPMSimulator:
         self.n_control = n_control = cfg.n_controllers
         if self.n_control > 0:
             self.control_idx = ti.field(dtype=ti.int32, shape=(n_particles, ))
-            self.action = ti.Vector.field(dim, dtype=dtype, shape=(n_control, ), needs_grad=True)
+            self.action = ti.Vector.field(dim, dtype=dtype, shape=(n_control ), needs_grad=True)
 
         # collision
         self.collision_type = cfg.collision_type # 0 for grid, 1 for particle, 2 for mixed

@@ -142,25 +142,28 @@ class PyRenderer:
         tfs[:,:3,3] = self.particles
         particle = pyrender.Mesh.from_trimesh(p_mesh, poses=tfs)
 
-        # attached particles
-        if control_idx is not None:
-            control_idx = np.where(control_idx>=0)[0]
-            p_mesh = trimesh.creation.uv_sphere(radius=0.005) # larger radius
-            attached_particles_color = 1-np.array(self.particles_color) # to demonstrate the difference
-            attached_particles_color[3] = 1.0 # set alpha to 1
-            p_mesh.visual.vertex_colors = attached_particles_color
-            tfs = np.tile(np.eye(4), (len(control_idx), 1, 1))
-            tfs[:,:3,3] = self.particles[control_idx]
-            particle_att = pyrender.Mesh.from_trimesh(p_mesh, poses=tfs)
-
-
         # scene
         scene = pyrender.Scene()
         for mesh in meshes:
             scene.add(mesh)
         scene.add(particle)
+
+        # attached particles
         if control_idx is not None:
-            scene.add(particle_att)
+            num_controller = len(np.unique(control_idx)) - 1 # -1 for uncontrolled particles, so different elements in control_idx -1 is the number of controllers
+            print("num_controller",num_controller)
+            for i in range(num_controller):
+                control_idx_i = np.where(control_idx==i)[0]
+                p_mesh = trimesh.creation.uv_sphere(radius=0.005)
+                # attached_particles_color = 1-np.array(self.particles_color) # to demonstrate the difference
+                attached_particles_color = np.random.rand(4)
+                attached_particles_color[3] = 1.0 # set alpha to 1
+                p_mesh.visual.vertex_colors = attached_particles_color
+                tfs = np.tile(np.eye(4), (len(control_idx_i), 1, 1))
+                tfs[:,:3,3] = self.particles[control_idx_i]
+                particle_att = pyrender.Mesh.from_trimesh(p_mesh, poses=tfs)
+                scene.add(particle_att)
+
 
         # scene.add(self.floor)
         if self.target is not None:
