@@ -74,7 +74,7 @@ def get_init_actions(args, env, choice=0):
         actions = torch.zeros(args.steps, 3)
     if choice == 1:
         actions = torch.zeros(args.steps, 3)
-        actions[:, 1] = 0.0
+        actions[:, 2] = 0.1
     else:
         assert False
     return torch.FloatTensor(actions)

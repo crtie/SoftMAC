@@ -35,7 +35,7 @@ class DoorLoss:
     @ti.kernel
     def compute_pose_loss_kernel(self, f: ti.i32):
         # self.pose_loss[None] += 1.0 * (self.rigid.rotation[f][0] - ti.static(ti.cos(np.pi / 8))) ** 2
-        pass
+        self.pose_loss[None] = 0.
 
     # -----------------------------------------------------------
     # compute velocity loss
