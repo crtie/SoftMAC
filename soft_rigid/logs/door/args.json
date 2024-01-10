@@ -1,8 +1,0 @@
-{
-    "exp_name": "door",
-    "config": "config/generate_jacobian_config.py",
-    "render_interval": 1,
-    "epochs": 100,
-    "steps": 1,
-    "save_interval": 100
-}
