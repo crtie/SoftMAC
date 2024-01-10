@@ -1,6 +1,7 @@
 import numpy as np
 import copy
-
+import open3d as o3d
+from pdb import set_trace as bp
 COLORS = [
     (127 << 16) + 127,
     (127 << 8),
@@ -28,6 +29,8 @@ class Shapes:
                 self.add_sphere(**kwargs)
             elif i['shape'] == 'predefined':
                 self.add_predefined(**kwargs)
+            elif i['shape'] == 'mesh':
+                self.add_mesh(**kwargs)
             else:
                 raise NotImplementedError(f"Shape {i['shape']} is not supported!")
         np.random.set_state(state)
@@ -81,6 +84,14 @@ class Shapes:
         p = np.load(path)
         p[:, :self.dim] += offset
         self.add_object(p, color)
+    
+    def add_mesh(self, path, offset=None, color=None):
+        if offset is None:
+            offset = np.zeros(self.dim)
+        mesh = o3d.io.read_triangle_mesh(str(path))
+        x = np.array(mesh.vertices)
+        print(x.shape)
+        bp()
 
     def get(self):
         assert len(self.objects) > 0, "please add at least one shape into the scene"

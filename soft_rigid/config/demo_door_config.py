@@ -30,30 +30,36 @@ _C.SIMULATOR.dt = 1e-3
 _C.SIMULATOR.collision_type = 2 # 0: grid 1: particle 2: mixed
 
 _C.SHAPES = [
+    # {
+    #     "shape": "box",
+    #     "width": (0.04, 0.05, 0.03),
+    #     "init_pos": [0.685, 0.15, 0.345],
+    #     "n_particles": 1200,
+    #     "color": ((121 << 16) + (36 << 8) + 13),
+    #     "init_rot": None
+    # },
     {
-        "shape": "box",
-        "width": (0.04, 0.05, 0.03),
-        "init_pos": [0.685, 0.15, 0.345],
-        "n_particles": 1200,
+        "shape": "mesh",
+        "path": Path("asset/plane/1a04e3eab45ca15dd86060f189eb133.obj"),
+        "offset": [0.685, 0.15, 0.345],
         "color": ((121 << 16) + (36 << 8) + 13),
-        "init_rot": None
     },
-    {
-        "shape": "box",
-        "width": (0.03, 0.05, 0.07),
-        "init_pos": [0.65, 0.15, 0.365],
-        "n_particles": 2100,
-        "color": ((121 << 16) + (36 << 8) + 13),
-        "init_rot": None
-    },
-    {
-        "shape": "box",
-        "width": (0.03, 0.05, 0.14),
-        "init_pos": [0.72, 0.15, 0.4],
-        "n_particles": 2100,
-        "color": ((121 << 16) + (36 << 8) + 13),
-        "init_rot": None
-    }
+    # {
+    #     "shape": "box",
+    #     "width": (0.03, 0.05, 0.07),
+    #     "init_pos": [0.65, 0.15, 0.365],
+    #     "n_particles": 2100,
+    #     "color": ((121 << 16) + (36 << 8) + 13),
+    #     "init_rot": None
+    # },
+    # {
+    #     "shape": "box",
+    #     "width": (0.03, 0.05, 0.14),
+    #     "init_pos": [0.72, 0.15, 0.4],
+    #     "n_particles": 2100,
+    #     "color": ((121 << 16) + (36 << 8) + 13),
+    #     "init_rot": None
+    # }
 ]
 
 # ---------------------------------------------------------------------------- #
