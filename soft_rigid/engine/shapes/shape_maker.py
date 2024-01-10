@@ -70,7 +70,8 @@ class Shapes:
 
         p = np.random.normal(size=(n_particles, self.dim))
         p /= np.linalg.norm(p, axis=-1, keepdims=True)
-        u = np.random.random(size=(n_particles, 1)) ** (1. / self.dim)
+        # u = np.random.random(size=(n_particles, 1)) ** (1. / self.dim)
+        u = 1.
         p = p * u * radius + np.array(init_pos)[:self.dim]
         self.add_object(p, color, init_rot=init_rot)
 

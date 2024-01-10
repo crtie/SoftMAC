@@ -25,16 +25,18 @@ _C.SIMULATOR.ground_friction = 0.
 _C.SIMULATOR.gravity = (0.,0.,0.)
 _C.SIMULATOR.ptype = 1  # 0: plastic 1: elastic 2: liquid
 _C.SIMULATOR.material_model = 0 # 0: Fixed Corotated 1: Neo-Hookean
-_C.SIMULATOR.n_controllers = 10
+_C.SIMULATOR.n_controllers = 100
+_C.SIMULATOR.n_key_points = 10
 _C.SIMULATOR.dt = 1e-3
 _C.SIMULATOR.collision_type = 2 # 0: grid 1: particle 2: mixed
 
 _C.SHAPES = [
     {
-        "shape": "box",
-        "width": (0.04, 0.05, 0.03),
+        "shape": "sphere",
+        # "width": (0.04, 0.05, 0.03),
+        "radius": 0.05,
         "init_pos": [0.685, 0.15, 0.345],
-        "n_particles": 1200,
+        "n_particles": 2048,
         "color": ((121 << 16) + (36 << 8) + 13),
         "init_rot": None
     },

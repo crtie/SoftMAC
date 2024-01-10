@@ -32,9 +32,13 @@ class JacobianLoss:
     # compute pose loss
     # -----------------------------------------------------------
     @ti.kernel
-    def compute_pose_loss_kernel(self, f: ti.i32):
+    def compute_pose_loss_kernel(self, f: ti.i32, point_idx:ti.i32, sub_idx:ti.i32, key_motion: ti.f32):
         # self.pose_loss[None] += 1.0 * (self.rigid.rotation[f][0] - ti.static(ti.cos(np.pi / 8))) ** 2
-        self.pose_loss[None]+= self.particle_x[f, 0].dot(self.particle_x[f, 0])
+        # self.pose_loss[None]+= self.particle_x[f, 0].dot(self.particle_x[f, 0])
+        assert sub_idx < 3
+        assert point_idx < self.n_particles
+        # print(sub_idx)
+        self.pose_loss[None]+= key_motion - self.particle_x[f, point_idx][sub_idx]
 
     # -----------------------------------------------------------
     # compute velocity loss
@@ -88,10 +92,10 @@ class JacobianLoss:
         self.loss.grad[None] = 0
 
     @ti.ad.grad_replaced
-    def compute_loss_kernel(self, f):
+    def compute_loss_kernel(self, f, point_idx, sub_idx, key_motion):
         self.clear_losses()
         if self.pose_weight[None] > 0:
-            self.compute_pose_loss_kernel(f)
+            self.compute_pose_loss_kernel(f, point_idx, sub_idx, key_motion)
         if self.velocity_weight[None] > 0:
             self.compute_velocity_loss_kernel(f)
         if self.contact_weight[None] > 0:
@@ -100,7 +104,7 @@ class JacobianLoss:
         self.sum_up_loss_kernel()
 
     @ti.ad.grad_for(compute_loss_kernel)
-    def compute_loss_kernel_grad(self, f):
+    def compute_loss_kernel_grad(self, f, point_idx, sub_idx, key_motion):
         self.clear_losses()
         self.sum_up_loss_kernel.grad()
         if self.contact_weight[None] > 0:
@@ -110,10 +114,10 @@ class JacobianLoss:
         if self.velocity_weight[None] > 0:
             self.compute_velocity_loss_kernel.grad(f)
         if self.pose_weight[None] > 0:
-            self.compute_pose_loss_kernel.grad(f)
+            self.compute_pose_loss_kernel.grad(f, point_idx, sub_idx, key_motion)
 
-    def _extract_loss(self, f):
-        self.compute_loss_kernel(f)
+    def _extract_loss(self, f, point_idx, sub_idx, key_motion):
+        self.compute_loss_kernel(f, point_idx, sub_idx, key_motion)
         return {
             'loss': self.loss[None],
             'pose_loss': self.pose_loss[None] * self.pose_weight[None],
@@ -121,8 +125,8 @@ class JacobianLoss:
             'contact_loss': self.contact_loss[None] * self.contact_weight[None],
         }
 
-    def compute_loss(self, f):
-        loss_info = self._extract_loss(f)
+    def compute_loss(self, f, point_idx, sub_idx, key_motion):
+        loss_info = self._extract_loss(f, point_idx, sub_idx, key_motion)
         return loss_info
 
     def clear(self):

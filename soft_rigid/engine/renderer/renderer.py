@@ -150,7 +150,7 @@ class PyRenderer:
 
         # attached particles
         if control_idx is not None:
-            num_controller = len(np.unique(control_idx)) - 1 # -1 for uncontrolled particles, so different elements in control_idx -1 is the number of controllers
+            num_controller = len(np.unique(control_idx))  
             print("num_controller",num_controller)
             for i in range(num_controller):
                 control_idx_i = np.where(control_idx==i)[0]

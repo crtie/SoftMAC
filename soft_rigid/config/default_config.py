@@ -25,6 +25,7 @@ _C.SIMULATOR.ptype = 0  # 0: plastic 1: elastic 2: fluid
 _C.SIMULATOR.material_model = 1 # 0: Fixed Corotated 1: Neo-Hookean
 _C.SIMULATOR.dt = 1e-4
 _C.SIMULATOR.n_controllers = 0
+_C.SIMULATOR.n_key_points = 0
 _C.SIMULATOR.collision_type = 2 # 0: grid 1: particle 2: mixed
 
 # ---------------------------------------------------------------------------- #
