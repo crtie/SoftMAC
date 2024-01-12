@@ -31,14 +31,22 @@ _C.SIMULATOR.dt = 1e-3
 _C.SIMULATOR.collision_type = 2 # 0: grid 1: particle 2: mixed
 
 _C.SHAPES = [
+    # {
+    #     "shape": "sphere",
+    #     # "width": (0.04, 0.05, 0.03),
+    #     "radius": 0.05,
+    #     "init_pos": [0.685, 0.15, 0.345],
+    #     "n_particles": 2048,
+    #     "color": ((121 << 16) + (36 << 8) + 13),
+    #     "init_rot": None
+    # },
     {
-        "shape": "sphere",
-        # "width": (0.04, 0.05, 0.03),
-        "radius": 0.05,
-        "init_pos": [0.685, 0.15, 0.345],
-        "n_particles": 2048,
+        "shape": "predefined",
+        "path": Path("/data/partical_object/car/167df2c10c116eb5d61b6a34f3fd808c.npy"),
+        "scale": 1.0,
+        # "n_particles": 1200,
+        "offset": [0.,0.,0.],
         "color": ((121 << 16) + (36 << 8) + 13),
-        "init_rot": None
     },
     # {
     #     "shape": "box",

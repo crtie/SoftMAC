@@ -1,7 +1,13 @@
+import sys, os
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 import numpy as np
 import copy
 import open3d as o3d
 from pdb import set_trace as bp
+import time
+import torch
+from pointnet2_ops import pointnet2_utils
+from .utils import fps_cuda
 COLORS = [
     (127 << 16) + 127,
     (127 << 8),
@@ -29,8 +35,8 @@ class Shapes:
                 self.add_sphere(**kwargs)
             elif i['shape'] == 'predefined':
                 self.add_predefined(**kwargs)
-            elif i['shape'] == 'mesh':
-                self.add_mesh(**kwargs)
+            # elif i['shape'] == 'mesh':
+            #     self.add_mesh(**kwargs)
             else:
                 raise NotImplementedError(f"Shape {i['shape']} is not supported!")
         np.random.set_state(state)
@@ -61,6 +67,7 @@ class Shapes:
         if n_particles is None:
             n_particles = self.get_n_particles(np.prod(width))
         p = (np.random.random((n_particles, self.dim)) * 2 - 1) * (0.5 * width) + np.array(init_pos)
+        print(type(p), p.shape, p.dtype)
         self.add_object(p, color, init_rot=init_rot)
 
     def add_sphere(self, init_pos, radius, n_particles=10000, color=None, init_rot=None):
@@ -78,20 +85,17 @@ class Shapes:
         p = p * u * radius + np.array(init_pos)[:self.dim]
         self.add_object(p, color, init_rot=init_rot)
 
-    def add_predefined(self, path, offset=None, color=None):
+    def add_predefined(self, path, offset=None, color=None, scale=1.):
         if offset is None:
             offset = np.zeros(self.dim)
         p = np.load(path)
+
+        # p = p_norm + center
         p[:, :self.dim] += offset
+
+        # print(p[:50])
+        print(type(p), p.shape, p.dtype)
         self.add_object(p, color)
-    
-    def add_mesh(self, path, offset=None, color=None):
-        if offset is None:
-            offset = np.zeros(self.dim)
-        mesh = o3d.io.read_triangle_mesh(str(path))
-        x = np.array(mesh.vertices)
-        print(x.shape)
-        bp()
 
     def get(self):
         assert len(self.objects) > 0, "please add at least one shape into the scene"

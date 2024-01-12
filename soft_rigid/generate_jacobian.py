@@ -188,16 +188,13 @@ def main(args):
         target_normal = estimate_normals(target_state)
 
         #! preparation
-        
         ti.ad.clear_all_gradients()
         env.initialize()
         init_particles, _ = env.shapes.get()
         num_particles = init_particles.shape[0]
         jacobian = np.zeros((cfg.SIMULATOR.n_key_points, num_particles, 3, 3))
         ##! jacobian is supposed to be (num_key_points, num_particles, 3, 3)
-
         prepare_time = time.time() - tik
-
         tik = time.time()
         #! compute jacobian
         for i in range(len(key_points)):

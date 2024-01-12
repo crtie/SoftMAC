@@ -6,7 +6,6 @@ from pathlib import Path
 from config import load
 import json
 import open3d as o3d
-
 # ===============================
 # Rendering
 # ===============================
@@ -71,7 +70,6 @@ def prepare(args):
 # ===============================
 # select control points
 # ===============================
-
 def fps_select(points, n_samples):
     # points: (n_points, dim)
     # return: (n_samples, )
@@ -89,6 +87,19 @@ def fps_select(points, n_samples):
             distances[j] = min(distances[j], np.linalg.norm(points[j] - points[farthest]))
         farthest = np.argmax(distances)
     return np.array(selected_idx)
+
+from pointnet2_ops import pointnet2_utils
+import torch
+
+def fps_cuda(p,num_sample):
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    p = torch.tensor(p, dtype=torch.float32).to(device)
+    idx = pointnet2_utils.furthest_point_sample(p.unsqueeze(0).contiguous(), num_sample).squeeze()
+    idx = idx.cpu().numpy()
+    p = p[idx].cpu().numpy()
+    p = p.astype(np.float64)
+    return p
+
 
 def knn_select(points, center_idx ,n_samples):
     # points: (n_points, dim)
@@ -154,7 +165,6 @@ class K_Means(object):
 # ===============================
 # normal estimation
 # ===============================
-
 def estimate_normals(points, radius=0.01):
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(points)
