@@ -52,7 +52,7 @@ _C.SHAPES = [
         "path": Path("/data/partical_object/car/167df2c10c116eb5d61b6a34f3fd808c.npy"),
         "scale": 0.2,
         # "n_particles": 1200,
-        "offset": [-0.3, 0.15, 0.345],
+        "offset": [0.6, 0.15, 0.345],
         "color": ((121 << 16) + (36 << 8) + 13),
     },
     # {

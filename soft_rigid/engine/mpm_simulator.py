@@ -82,6 +82,13 @@ class MPMSimulator:
             self.v_tmp = ti.Vector.field(dim, dtype=dtype, shape=(n_particles), needs_grad=True)
             self.v_tgt = ti.Vector.field(dim, dtype=dtype, shape=(n_particles), needs_grad=True)
 
+    def set_material(self, E, nu):
+        self._mu, self._lam = E / (2 * (1 + nu)), E * nu / ((1 + nu) * (1 - 2 * nu))  # Lame parameters
+        if self.ptype == 1: # make elastic material softer
+            self._mu, self._lam = 0.3 * self._mu, 0.3 * self._lam
+        elif self.ptype == 2:   # liquid
+            self._mu = 0.0
+
     def initialize(self):
         self.gravity[None] = self.default_gravity
         self.yield_stress.fill(self._yield_stress)

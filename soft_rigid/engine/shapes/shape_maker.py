@@ -89,8 +89,10 @@ class Shapes:
         if offset is None:
             offset = np.zeros(self.dim)
         p = np.load(path)
-
-        # p = p_norm + center
+        center = p.mean(axis=0)
+        p_norm = p - center
+        p_norm *= scale
+        p = p_norm + center
         p[:, :self.dim] += offset
 
         # print(p[:50])

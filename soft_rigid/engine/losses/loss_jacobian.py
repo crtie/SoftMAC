@@ -38,7 +38,7 @@ class JacobianLoss:
         assert sub_idx < 3
         assert point_idx < self.n_particles
         # print(sub_idx)
-        self.pose_loss[None]+= key_motion - self.particle_x[f, point_idx][sub_idx]
+        self.pose_loss[None]+= self.particle_x[f, point_idx][sub_idx]
 
     # -----------------------------------------------------------
     # compute velocity loss

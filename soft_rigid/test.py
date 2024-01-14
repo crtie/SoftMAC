@@ -20,8 +20,8 @@ def getFileSize(filePath):
     			return(round(MBX/1024),'G')
 
 
-print(getFileSize('logs/door/data/1704809678.007565.pkl'))
-with open('logs/door/data/1704809678.007565.pkl', 'rb') as f:
+print(getFileSize('/data/partical_object/jacobian/plane/1deb997079e0b3cd6c1cd53dbc9f7b8e.pkl'))
+with open('/data/partical_object/jacobian/plane/1deb997079e0b3cd6c1cd53dbc9f7b8e.pkl', 'rb') as f:
 	a = pickle.load(f)
 print(len(a))
 print(type(a))
@@ -29,3 +29,5 @@ print(a[0].keys())
 for i in range(1):
 	for key in a[i].keys():
 		print(key, type(a[i][key]))
+		if type(a[i][key]) == np.ndarray:
+			print(a[i][key].shape)

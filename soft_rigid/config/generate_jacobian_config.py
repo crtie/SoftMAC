@@ -7,6 +7,7 @@ _C = CN()
 cfg = _C
 _C.control_mode="rigid"
 _C.env_dt = 1e-3
+_C.max_attached_points = 4
 gravity = (0., -9.8, 0.)
 
 # ---------------------------------------------------------------------------- #
@@ -26,8 +27,10 @@ _C.SIMULATOR.gravity = (0.,0.,0.)
 _C.SIMULATOR.ptype = 1  # 0: plastic 1: elastic 2: liquid
 _C.SIMULATOR.material_model = 0 # 0: Fixed Corotated 1: Neo-Hookean
 _C.SIMULATOR.n_controllers = 100
+# _C.SIMULATOR.n_controllers = 200
 _C.SIMULATOR.n_key_points = 10
 _C.SIMULATOR.dt = 1e-3
+
 _C.SIMULATOR.collision_type = 2 # 0: grid 1: particle 2: mixed
 
 _C.SHAPES = [
@@ -43,9 +46,9 @@ _C.SHAPES = [
     {
         "shape": "predefined",
         "path": Path("/data/partical_object/car/167df2c10c116eb5d61b6a34f3fd808c.npy"),
-        "scale": 1.0,
+        "scale": 0.2,
         # "n_particles": 1200,
-        "offset": [0.,0.,0.],
+        "offset": [0.6, 0.15, 0.345],
         "color": ((121 << 16) + (36 << 8) + 13),
     },
     # {

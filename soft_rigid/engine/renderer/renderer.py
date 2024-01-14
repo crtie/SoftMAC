@@ -9,7 +9,7 @@ os.environ['PYOPENGL_PLATFORM'] = 'egl'
 class PyRenderer:
     def __init__(self, cfg, primitives=None):
         # camera
-        self.camera = pyrender.PerspectiveCamera(yfov=np.pi, aspectRatio=1.0)
+        self.camera = pyrender.PerspectiveCamera(yfov=np.pi / 3, aspectRatio=1.0)
         self.camera_pose = np.eye(4)
         pitch, yaw = cfg.camera_rot
         pos = cfg.camera_pos

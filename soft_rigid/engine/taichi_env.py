@@ -12,7 +12,7 @@ from .shapes import Shapes
 from .losses import *
 
 # TODO: run on GPU, fast_math will cause error on float64's sqrt; removing it cuases compile error..
-ti.init(arch=ti.gpu, debug=False, fast_math=True, device_memory_GB=40, device_memory_fraction=0.9)
+ti.init(arch=ti.gpu, debug=False, fast_math=True, device_memory_GB=36, device_memory_fraction=0.9)
 
 @ti.data_oriented
 class TaichiEnv:
